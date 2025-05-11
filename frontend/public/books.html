@@ -55,22 +55,19 @@
             background-color: #0047A3;
         }
 
-        /* Centered Go to Cart Button */
-        .cart-bottom-btn {
-            display: block;
-            margin: 40px auto; /* Centers the button */
+        .cart-top-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             background-color: #28a745;
             color: white;
-            padding: 15px;
-            font-size: 18px;
-            border-radius: 8px;
+            padding: 10px 15px;
+            border-radius: 5px;
             border: none;
             cursor: pointer;
-            width: 200px;
-            text-align: center;
         }
 
-        .cart-bottom-btn:hover {
+        .cart-top-btn:hover {
             background-color: #218838;
         }
     </style>
@@ -79,6 +76,7 @@
 
     <header class="d-flex justify-content-between align-items-center px-4 py-3 bg-light">
         <h1 class="fw-bold text-primary">Brissie Bookstore</h1>
+        <button class="cart-top-btn" onclick="goToCart()">Go to Cart</button>
         <button class="btn btn-danger logout-btn" onclick="window.location.href='index.html'">Logout</button>
     </header>
 
@@ -118,9 +116,6 @@
             </div>
         </div>
     </main>
-
-    <!-- Centered Go to Cart Button -->
-    <button class="cart-bottom-btn" onclick="goToCart()">Go to Cart</button>
 
     <script>
     function addToCart(bookName, price, image) {

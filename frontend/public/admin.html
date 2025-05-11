@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brissie Bookstore - Admin Login</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <style>
+        .form-control, .btn-custom {
+            border: 2px solid #ADD8E6;
+        }
+
+        .btn-custom {
+            background-color: white;
+            color: #0066CC;
+        }
+
+        .btn-custom:hover {
+            background-color: #0066CC;
+            color: white;
+        }
+
+        .login-container {
+            border: 2px solid #ADD8E6;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <header class="text-center py-4">
+        <h1 class="fw-bold text-primary">Brissie Bookstore - Admin</h1>
+    </header>
+
+    <main class="flex-grow-1 d-flex justify-content-center align-items-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="card login-container">
+                        <h2 class="text-center mb-3">Admin Log In</h2>
+                        <form>
+                            <div class="mb-3">
+                                <label for="admin-email" class="form-label d-block text-start">Email</label>
+                                <input type="email" id="admin-email" class="form-control" placeholder="Enter email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="admin-password" class="form-label d-block text-start">Password</label>
+                                <input type="password" id="admin-password" class="form-control" placeholder="Enter password">
+                            </div>
+                            <button type="button" class="btn btn-custom w-100" onclick="window.location.href='admin_dashboard.html'">Login</button>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+ <footer class="text-center py-3">
+        <a href="#" class="mx-2 text-muted" aria-label="Twitter"><i class="ti ti-brand-twitter"></i></a>
+        <a href="#" class="mx-2 text-muted" aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
+        <a href="https://www.youtube.com/" class="mx-2 text-muted" aria-label="YouTube"><i class="ti ti-brand-youtube"></i></a>
+        <a href="#" class="mx-2 text-muted" aria-label="LinkedIn"><i class="ti ti-brand-linkedin"></i></a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
