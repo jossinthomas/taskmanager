@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-// Check if the model is already registered (important for hot reloads / nodemon)
-const UserModel = mongoose.models.User || mongoose.model('User', new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   surname: { type: String },
   email: { type: String, required: true, unique: true },
@@ -9,9 +8,10 @@ const UserModel = mongoose.models.User || mongoose.model('User', new mongoose.Sc
   role: { type: String, enum: ['user', 'admin'], default: 'user' }
 }, {
   timestamps: true
-}));
+});
 
-// --- OOP Classes ---
+const UserModel = mongoose.model('User', userSchema);
+
 class User {
   constructor(name, email, password, role = 'user') {
     this.name = name;

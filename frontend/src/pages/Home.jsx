@@ -1,9 +1,37 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Home() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      navigate(`/books?search=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
   return (
     <div>
+      {/* Search Bar */}
+      <section className="bg-white py-3 border-bottom">
+        <div className="container">
+          <form onSubmit={handleSearch} className="row justify-content-center">
+            <div className="col-md-6 d-flex">
+              <input
+                type="text"
+                className="form-control me-2"
+                placeholder="Search for books..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button className="btn btn-primary" type="submit">Search</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
       {/* Hero Section */}
       <section className="bg-light rounded-3 overflow-hidden p-5 mb-5">
         <div className="container">

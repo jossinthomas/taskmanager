@@ -1,4 +1,4 @@
-const { User, Admin } = require('./user'); // ✅ fixed path and case
+const { User, Admin } = require('./User');
 
 class UserFactory {
   static createUser(name, email, password, role = 'user') {

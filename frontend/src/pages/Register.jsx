@@ -1,61 +1,116 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from '../utils/axiosConfig';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    surname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
-  const [error, setError] = useState('');
-
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
+      alert("Passwords do not match!");
       return;
     }
 
     try {
-      const response = await axios.post('/users/register', {
+      const response = await axios.post("http://localhost:5000/api/users/register", {
         name: formData.name,
         surname: formData.surname,
         email: formData.email,
-        password: formData.password
+        password: formData.password,
       });
 
-      alert("Registration successful! You can now login.");
-      navigate('/login');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed.');
+      alert(response.data.message);
+      navigate("/login");
+    } catch (error) {
+      alert(error.response?.data?.message || "Registration failed");
     }
   };
 
   return (
-    <div className="container mt-5">
-      <h1 className="text-center mb-4">Register</h1>
-      <div className="card p-4 mx-auto" style={{ maxWidth: '400px' }}>
+    <div className="d-flex align-items-center justify-content-center vh-100 bg-white">
+      <div className="card shadow p-4" style={{ width: "100%", maxWidth: "400px" }}>
+        <h2 className="text-center mb-4 fw-bold">Register</h2>
         <form onSubmit={handleSubmit}>
-          <input id="name" placeholder="First Name" className="form-control mb-3" onChange={handleChange} required />
-          <input id="surname" placeholder="Surname" className="form-control mb-3" onChange={handleChange} />
-          <input id="email" type="email" placeholder="Email" className="form-control mb-3" onChange={handleChange} required />
-          <input id="password" type="password" placeholder="Password" className="form-control mb-3" onChange={handleChange} required />
-          <input id="confirmPassword" type="password" placeholder="Confirm Password" className="form-control mb-3" onChange={handleChange} required />
-          
-          {error && <p className="text-danger">{error}</p>}
-          
-          <button type="submit" className="btn btn-dark w-100">Register</button>
+          <div className="mb-3">
+            <label className="form-label">Name</label>
+            <input
+              type="text"
+              name="name"
+              className="form-control"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Surname</label>
+            <input
+              type="text"
+              name="surname"
+              className="form-control"
+              value={formData.surname}
+              onChange={handleChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Email</label>
+            <input
+              type="email"
+              name="email"
+              className="form-control"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Password</label>
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              className="form-control"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="d-grid gap-2">
+            <button type="submit" className="btn btn-dark">
+              Register
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => navigate("/login")}
+            >
+              Back to Login
+            </button>
+          </div>
         </form>
       </div>
     </div>
