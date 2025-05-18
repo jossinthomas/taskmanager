@@ -1,3 +1,4 @@
+// backend/models/book.js
 const mongoose = require('mongoose');
 
 const bookSchema = new mongoose.Schema({
@@ -5,12 +6,12 @@ const bookSchema = new mongoose.Schema({
   author: String,
   price: Number,
   category: String,
+  image: String,
   description: String,
   isbn: String,
   pages: Number,
   publisher: String,
-  publicationDate: String,
-  image: String
-}, { timestamps: true });
+  publicationDate: Date
+});
 
 module.exports = mongoose.model('Book', bookSchema);

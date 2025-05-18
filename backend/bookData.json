@@ -1,0 +1,44 @@
+[
+  {
+    "title": "Atomic Habits",
+    "author": "James Clear",
+    "price": 19.99,
+    "category": "Self-Help",
+    "image": "/atomichabits.jpg"
+  },
+  {
+    "title": "The Silent Patient",
+    "author": "Alex Michaelides",
+    "price": 24.99,
+    "category": "Thriller",
+    "image": "/silentpatient.jpg"
+  },
+  {
+    "title": "It Ends with Us",
+    "author": "Colleen Hoover",
+    "price": 22.49,
+    "category": "Romance",
+    "image": "/endswithus.jpg"
+  },
+  {
+    "title": "Rich Dad Poor Dad",
+    "author": "Robert Kiyosaki",
+    "price": 17.99,
+    "category": "Finance",
+    "image": "/richdad.jpg"
+  },
+  {
+    "title": "Start With Why",
+    "author": "Simon Sinek",
+    "price": 21.5,
+    "category": "Motivation",
+    "image": "/startwithwhy.jpg"
+  },
+  {
+    "title": "The Alchemist",
+    "author": "Paulo Coelho",
+    "price": 18.75,
+    "category": "Fiction",
+    "image": "/alchemist.jpg"
+  }
+]

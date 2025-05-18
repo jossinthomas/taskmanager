@@ -1,20 +1,22 @@
 const express = require('express');
 const router = express.Router();
+
+// ✅ Correct import path
 const {
-  addBook,
   getAllBooks,
   getBookById,
+  addBook,
+  updateBook,
   deleteBook,
-  updateBook
-} = require('../controllers/bookController');
+  undoDeleteBook,
+} = require('../controllers/bookController'); // Make sure this file exists and exports the functions properly
 
-// Public Routes
+// ✅ Correct usage of functions — no () after function names
 router.get('/', getAllBooks);
 router.get('/:id', getBookById);
-
-// Admin Routes
 router.post('/', addBook);
 router.put('/:id', updateBook);
 router.delete('/:id', deleteBook);
+router.post('/:id/undo', undoDeleteBook);
 
 module.exports = router;
