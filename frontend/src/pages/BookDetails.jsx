@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 
 const booksData = [
   {
@@ -7,14 +7,13 @@ const booksData = [
     title: 'Great Big Beautiful Life',
     author: 'Emily Henry',
     price: 34.99,
-    image: '/open-book-library.png',
+    image: '/great-big-beautiful-life.jpg',
     description:
-      'A heartwarming novel about finding joy in unexpected places. Follow the journey of protagonist Sarah as she navigates life’s challenges and discovers that beauty can be found in the most unexpected moments.',
-    category: 'Fiction',
-    pages: 384,
-    publisher: 'Berkley',
-    publicationDate: 'April 23, 2024',
-    isbn: '978-0593441275',
+      'A dazzling and sweeping new novel from #1 Sunday Times bestselling author Emily Henry!When Margaret Ives, the famously reclusive heiress, invites eternal optimist Alice Scott to the balmy Little Crescent Island, Alice knows this is it-',
+    category: 'Romance',
+    releaseDate: '23 Apr 2025',
+    format: 'Paperback',
+    tag: 'Romance'
   },
   {
     id: '2',
@@ -36,66 +35,248 @@ const booksData = [
 function BookDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const book = booksData.find((b) => b.id === id);
-
+  const book = booksData.find((b) => b.id === id) || booksData[0]; // Default to first book if not found
   const [quantity, setQuantity] = useState(1);
 
-  const handleAddToCart = () => {
-    alert(`Added ${quantity} of "${book.title}" to cart!`);
-    navigate('/cart');
-  };
-
-  if (!book) {
-    return (
-      <div className="container mt-5">
-        <h2 className="text-danger">Book not found.</h2>
-      </div>
-    );
-  }
-
   return (
-    <div className="container mt-5">
-      <div className="row g-4">
-        {/* Book Image */}
-        <div className="col-md-6">
-          <div className="bg-light p-4 rounded d-flex justify-content-center align-items-center" style={{ minHeight: '400px' }}>
-            <img src={book.image} alt={book.title} className="img-fluid" style={{ maxHeight: '400px' }} />
+    <div style={{ 
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {/* Navigation Bar */}
+      <nav style={{
+        padding: '1rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottom: '1px solid #eee'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <span style={{ 
+              fontWeight: 'bold',
+              fontSize: '1.5rem',
+              marginRight: '0.5rem',
+              padding: '0.25rem 0.5rem',
+              backgroundColor: '#000',
+              color: '#fff'
+            }}>BOOK</span>
+            <span style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>STORE</span>
+          </Link>
+        </div>
+        <div style={{ 
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1.5rem'
+        }}>
+          <div style={{ 
+            display: 'flex',
+            alignItems: 'center',
+            backgroundColor: '#f3f4f6',
+            borderRadius: '9999px',
+            padding: '0.5rem 1rem',
+            width: '300px'
+          }}>
+            <span style={{ marginRight: '0.5rem' }}>☰</span>
+            <input
+              type="text"
+              placeholder="Search by keywords"
+              style={{
+                border: 'none',
+                backgroundColor: 'transparent',
+                outline: 'none',
+                width: '100%'
+              }}
+            />
+            <button style={{
+              border: 'none',
+              backgroundColor: 'transparent',
+              cursor: 'pointer'
+            }}>
+              🔍
+            </button>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <Link to="/cart" style={{ textDecoration: 'none', color: 'inherit', position: 'relative' }}>
+              <span style={{ 
+                position: 'absolute',
+                top: '-8px',
+                right: '-8px',
+                backgroundColor: 'red',
+                color: 'white',
+                borderRadius: '50%',
+                padding: '2px 6px',
+                fontSize: '0.75rem'
+              }}>0</span>
+              🛒
+            </Link>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <img 
+                src="/user-avatar.png"
+                alt="User"
+                style={{ 
+                  width: '32px',
+                  height: '32px',
+                  borderRadius: '50%'
+                }}
+              />
+              <span>welcome back, Lisa</span>
+            </div>
+            <button
+              onClick={() => navigate('/login')}
+              style={{
+                padding: '0.5rem 1rem',
+                backgroundColor: '#333',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              LogOut
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Book Details Content */}
+      <div style={{ 
+        padding: '2rem',
+        display: 'flex',
+        gap: '2rem'
+      }}>
+        {/* Left Side - Book Image */}
+        <div style={{ flex: '0 0 40%' }}>
+          <div style={{ position: 'relative' }}>
+            <button
+              style={{
+                position: 'absolute',
+                top: '1rem',
+                left: '1rem',
+                backgroundColor: '#333',
+                color: 'white',
+                border: 'none',
+                borderRadius: '50%',
+                width: '2rem',
+                height: '2rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer'
+              }}
+            >
+              ★
+            </button>
+            <img
+              src={book.image}
+              alt={book.title}
+              style={{
+                width: '100%',
+                height: 'auto',
+                borderRadius: '8px'
+              }}
+            />
           </div>
         </div>
 
-        {/* Book Details */}
-        <div className="col-md-6">
-          <h1 className="h3 mb-2">{book.title}</h1>
-          <p className="lead text-muted mb-3">by {book.author}</p>
-          <p className="h4 fw-bold mb-4">${book.price.toFixed(2)}</p>
-          <p>{book.description}</p>
+        {/* Right Side - Book Details */}
+        <div style={{ flex: '1' }}>
+          <h1 style={{ 
+            fontSize: '2rem',
+            marginBottom: '1rem'
+          }}>{book.title}</h1>
 
-          <h5 className="mt-4 mb-2">Specifications</h5>
-          <ul className="list-unstyled">
-            <li><strong>Category:</strong> {book.category}</li>
-            <li><strong>Pages:</strong> {book.pages}</li>
-            <li><strong>Publisher:</strong> {book.publisher}</li>
-            <li><strong>Publication Date:</strong> {book.publicationDate}</li>
-            <li><strong>ISBN:</strong> {book.isbn}</li>
-          </ul>
-
-          {/* Quantity Selector */}
-          <div className="mb-4 d-flex align-items-center">
-            <label className="form-label me-2">Quantity:</label>
-            <div className="input-group" style={{ width: '120px' }}>
-              <button className="btn btn-outline-secondary" onClick={() => setQuantity(quantity > 1 ? quantity - 1 : 1)}>-</button>
-              <span className="form-control text-center">{quantity}</span>
-              <button className="btn btn-outline-secondary" onClick={() => setQuantity(quantity + 1)}>+</button>
-            </div>
+          <div style={{ 
+            display: 'inline-block',
+            backgroundColor: '#e5e7eb',
+            padding: '0.25rem 0.75rem',
+            borderRadius: '9999px',
+            marginBottom: '1rem'
+          }}>
+            {book.tag}
           </div>
 
-          {/* Buttons */}
-          <div className="d-grid gap-2 mb-3">
-            <button className="btn btn-dark" onClick={handleAddToCart}>Add to Cart</button>
-            <div className="d-flex justify-content-between">
-              <button className="btn btn-outline-primary" onClick={() => navigate('/cart')}>Go to Cart</button>
-              <button className="btn btn-outline-secondary" onClick={() => navigate('/books')}>Browse More Books</button>
+          <div style={{ 
+            fontSize: '2rem',
+            fontWeight: 'bold',
+            marginBottom: '1rem'
+          }}>
+            ${book.price.toFixed(2)}
+          </div>
+
+          <ul style={{ 
+            listStyle: 'none',
+            padding: 0,
+            marginBottom: '1.5rem'
+          }}>
+            <li style={{ marginBottom: '0.5rem' }}>• {book.author}</li>
+            <li style={{ marginBottom: '0.5rem' }}>• {book.releaseDate}</li>
+            <li style={{ marginBottom: '0.5rem' }}>• {book.format}</li>
+          </ul>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem' }}>Quantity</label>
+            <select
+              value={quantity}
+              onChange={(e) => setQuantity(Number(e.target.value))}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid #ddd',
+                borderRadius: '4px',
+                marginBottom: '1rem'
+              }}
+            >
+              {[1, 2, 3, 4, 5].map(num => (
+                <option key={num} value={num}>{num}</option>
+              ))}
+            </select>
+            <button
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                backgroundColor: '#333',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Add to car
+            </button>
+          </div>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '1rem',
+              borderRadius: '4px',
+              border: '1px solid #ddd',
+              marginBottom: '1rem'
+            }}>
+              <span>Overview</span>
+              <span>▼</span>
             </div>
+            <p style={{ 
+              color: '#666',
+              lineHeight: '1.6'
+            }}>
+              {book.description}
+              <button
+                style={{
+                  border: 'none',
+                  background: 'none',
+                  color: '#666',
+                  padding: 0,
+                  cursor: 'pointer'
+                }}
+              >
+                ... Read more
+              </button>
+            </p>
           </div>
         </div>
       </div>

@@ -1,54 +1,6 @@
-// import React from 'react';
-// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
-// // Components
-// import Navbar from './components/Navbar';
-
-// // General Pages
-// import Home from './pages/Home';
-// import Login from './pages/Login';
-// import Register from './pages/Register';
-// import AdminLogin from './pages/AdminLogin';
-// import Books from './pages/Books';
-// import BookDetails from './pages/BookDetails';
-// import Cart from './pages/Cart';
-// import Checkout from './pages/Checkout';
-// import Confirmation from './pages/Confirmation';
-
-// // Admin Pages
-// import Dashboard from './pages/Admin/Dashboard';
-// import AddBook from './pages/Admin/AddBook';
-
-// function App() {
-//   return (
-//     <Router>
-//       <Navbar />
-//       <div className="pt-5"> {/* Offset for fixed navbar */}
-//         <Routes>
-//           {/* Public Pages */}
-//           <Route path="/" element={<Home />} />
-//           <Route path="/login" element={<Login />} />
-//           <Route path="/register" element={<Register />} />
-//           <Route path="/admin" element={<AdminLogin />} />
-//           <Route path="/books" element={<Books />} />
-//           <Route path="/books/:id" element={<BookDetails />} />
-//           <Route path="/cart" element={<Cart />} />
-//           <Route path="/checkout" element={<Checkout />} />
-//           <Route path="/confirmation" element={<Confirmation />} />
-
-//           {/* Admin Panel */}
-//           <Route path="/admin/dashboard" element={<Dashboard />} />
-//           <Route path="/admin/add-book" element={<AddBook />} />
-//         </Routes>
-//       </div>
-//     </Router>
-//   );
-// }
-
-// export default App;
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ProtectedRoute from './components/ProtectedRoute';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -60,7 +12,7 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import Confirmation from './pages/Confirmation';
 import Dashboard from './pages/Admin/Dashboard';
-import AddBook from './pages/Admin/AddBook'; // ✅ Corrected line
+import AddBook from './pages/Admin/AddBook';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -68,19 +20,54 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Login />} /> {/* Default to Login */}
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/admin" element={<AdminLogin />} />
-         <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/books" element={<Books />} />
-        <Route path="/books/:id" element={<BookDetails />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/confirmation" element={<Confirmation />} />
-        <Route path="/admin/dashboard" element={<Dashboard />} />
-        <Route path="/admin/add-book" element={<AddBook />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        
+        {/* Protected Routes */}
+        <Route path="/" element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        } />
+        <Route path="/books" element={
+          <ProtectedRoute>
+            <Books />
+          </ProtectedRoute>
+        } />
+        <Route path="/books/:id" element={
+          <ProtectedRoute>
+            <BookDetails />
+          </ProtectedRoute>
+        } />
+        <Route path="/cart" element={
+          <ProtectedRoute>
+            <Cart />
+          </ProtectedRoute>
+        } />
+        <Route path="/checkout" element={
+          <ProtectedRoute>
+            <Checkout />
+          </ProtectedRoute>
+        } />
+        <Route path="/confirmation" element={
+          <ProtectedRoute>
+            <Confirmation />
+          </ProtectedRoute>
+        } />
+        
+        {/* Admin Routes */}
+        <Route path="/admin/dashboard" element={
+          <ProtectedRoute requireAdmin>
+            <Dashboard />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/add-book" element={
+          <ProtectedRoute requireAdmin>
+            <AddBook />
+          </ProtectedRoute>
+        } />
       </Routes>
     </Router>
   );

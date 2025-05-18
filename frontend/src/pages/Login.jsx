@@ -1,184 +1,202 @@
-// import React, { useState } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import axios from 'axios';
-
-// function Login() {
-//   const [email, setEmail] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [error, setError] = useState('');
-//   const navigate = useNavigate();
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-//     setError('');
-
-//     try {
-//       const res = await axios.post('http://localhost:5000/api/users/login', {
-//         email,
-//         password,
-//       });
-
-//       const user = res.data;
-//       localStorage.setItem('userInfo', JSON.stringify(user));
-
-//       if (user.role === 'admin') {
-//         navigate('/admin/dashboard');
-//       } else {
-//         navigate('/');
-//       }
-//     } catch (err) {
-//       setError(err.response?.data?.message || 'Login failed');
-//     }
-//   };
-
-//   return (
-//     <div className="container d-flex align-items-center justify-content-center vh-100 bg-light">
-//       <div className="card p-4 shadow" style={{ maxWidth: '400px', width: '100%' }}>
-//         <h2 className="text-center mb-4">Login</h2>
-
-//         {error && <div className="alert alert-danger">{error}</div>}
-
-//         <form onSubmit={handleLogin}>
-//           <div className="mb-3">
-//             <label htmlFor="email" className="form-label">Email address</label>
-//             <input
-//               type="email"
-//               className="form-control"
-//               id="email"
-//               value={email}
-//               onChange={(e) => setEmail(e.target.value)}
-//               required
-//             />
-//           </div>
-
-//           <div className="mb-3">
-//             <label htmlFor="password" className="form-label">Password</label>
-//             <input
-//               type="password"
-//               className="form-control"
-//               id="password"
-//               value={password}
-//               onChange={(e) => setPassword(e.target.value)}
-//               required
-//             />
-//           </div>
-
-//           <button type="submit" className="btn btn-dark w-100">Sign In</button>
-//         </form>
-
-//         <div className="text-center mt-3">
-//           Don’t have an account?{' '}
-//           <a href="/register" className="text-decoration-none">Register</a>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Login;
-
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Login() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [error, setError] = useState("");
+  const [form, setForm] = useState({ email: '', password: '', isAdmin: false });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setForm({
+      ...form,
+      [name]: type === 'checkbox' ? checked : value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setLoading(true);
+    setError('');
 
     try {
-      if (isAdmin) {
-        // Check against hardcoded admin
-        if (formData.email === "admin@bookstore.com" && formData.password === "admin123") {
-          localStorage.setItem("admin", "true");
-          navigate("/admin/dashboard");
-        } else {
-          setError("Invalid Admin Credentials");
-        }
+      const response = await axios.post('http://localhost:5000/api/users/login', {
+        email: form.email,
+        password: form.password,
+      });
+
+      const { token, user } = response.data;
+
+      // Save token and user info
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+
+      // Redirect based on role
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard');
       } else {
-        // Call real user login API
-        const res = await axios.post("http://localhost:5000/api/users/login", {
-          email: formData.email,
-          password: formData.password,
-        });
-
-        const user = res.data;
-        localStorage.setItem("userInfo", JSON.stringify(user));
-
-        navigate("/");
+        navigate('/');
       }
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="card shadow-lg p-4" style={{ maxWidth: "400px", width: "100%" }}>
-        <div className="text-center mb-3">
-          <h2 className="fw-bold">Bookstore</h2>
-          <p className="text-muted mb-1">Welcome back</p>
-          <small>Enter your credentials to continue</small>
+    <div style={{ 
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {/* Navigation Bar */}
+      <nav style={{
+        padding: '1rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderBottom: '1px solid #eee'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span style={{ 
+            fontWeight: 'bold',
+            fontSize: '1.5rem',
+            marginRight: '0.5rem',
+            padding: '0.25rem 0.5rem',
+            backgroundColor: '#000',
+            color: '#fff'
+          }}>BOOK</span>
+          <span style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>STORE</span>
         </div>
+        <div>
+          <a href="/" style={{ marginRight: '2rem', textDecoration: 'none', color: '#000' }}>Home</a>
+          <a href="/books" style={{ marginRight: '2rem', textDecoration: 'none', color: '#000' }}>Books</a>
+          <a href="/cart" style={{ marginRight: '2rem', textDecoration: 'none', color: '#000' }}>Cart</a>
+          <a href="/login" style={{ textDecoration: 'none', color: '#000' }}>Login</a>
+        </div>
+      </nav>
 
-        {error && <div className="alert alert-danger">{error}</div>}
+      {/* Login Form */}
+      <div style={{ 
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '2rem'
+      }}>
+        <div style={{
+          width: '100%',
+          maxWidth: '400px',
+          padding: '2rem',
+          borderRadius: '8px',
+          boxShadow: '0 0 10px rgba(0,0,0,0.1)'
+        }}>
+          <h2 style={{ 
+            textAlign: 'center',
+            marginBottom: '0.5rem'
+          }}>Bookstore</h2>
+          <h3 style={{ 
+            textAlign: 'center',
+            fontWeight: 'normal',
+            marginBottom: '0.5rem'
+          }}>Welcome back</h3>
+          <p style={{ 
+            textAlign: 'center',
+            color: '#666',
+            marginBottom: '2rem'
+          }}>Enter your credentials to continue</p>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label>Email</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1rem' }}>
+              <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem' }}>Email</label>
+              <input
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '1rem'
+                }}
+                id="email"
+                name="email"
+                type="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div style={{ marginBottom: '1rem' }}>
+              <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem' }}>Password</label>
+              <input
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '1rem'
+                }}
+                id="password"
+                name="password"
+                type="password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  name="isAdmin"
+                  checked={form.isAdmin}
+                  onChange={handleChange}
+                  style={{ marginRight: '0.5rem' }}
+                />
+                Login as Admin
+              </label>
+            </div>
+
+            {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+
+            <button
+              type="submit"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                backgroundColor: '#333',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontSize: '1rem',
+                cursor: 'pointer'
+              }}
+              disabled={loading}
+            >
+              {loading ? 'Signing in...' : 'Sign in'}
+            </button>
+          </form>
+
+          <div style={{ 
+            marginTop: '1rem',
+            textAlign: 'center'
+          }}>
+            <span>Don't have an account? </span>
+            <a 
+              href="/register" 
+              style={{ 
+                color: '#000',
+                textDecoration: 'none',
+                cursor: 'pointer'
+              }}
+            >
+              Register
+            </a>
           </div>
-
-          <div className="mb-3">
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
-          </div>
-
-          <div className="form-check mb-3">
-            <input
-              className="form-check-input"
-              type="checkbox"
-              id="adminCheck"
-              checked={isAdmin}
-              onChange={(e) => setIsAdmin(e.target.checked)}
-            />
-            <label className="form-check-label" htmlFor="adminCheck">
-              Login as Admin
-            </label>
-          </div>
-
-          <button type="submit" className="btn btn-dark w-100">Sign In</button>
-        </form>
-
-        <div className="text-center mt-3">
-          Don’t have an account?{" "}
-          <span className="text-primary" role="button" onClick={() => navigate("/register")}>
-            Register
-          </span>
         </div>
       </div>
     </div>
