@@ -1,0 +1,43 @@
+<h3 class="mt-4">Available Books</h3>
+<table class="table">
+    <thead>
+        <tr><th>Title</th><th>Author</th><th>Price</th><th>Actions</th></tr>
+    </thead>
+    <tbody id="books-list"></tbody>
+</table>
+
+<script>
+async function fetchBooks() {
+    const response = await fetch('http://localhost:5000/books');
+    const books = await response.json();
+    const list = document.getElementById('books-list');
+    list.innerHTML = books.map(book => `
+        <tr>
+            <td>${book.title}</td>
+            <td>${book.author}</td>
+            <td>$${book.price}</td>
+            <td>
+                <button onclick="editBook('${book._id}', '${book.title}', '${book.author}', '${book.price}', '${book.description}', '${book.image}', '${book.quantity}')" class="btn btn-warning">Edit</button>
+                <button onclick="deleteBook('${book._id}')" class="btn btn-danger">Delete</button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+async function deleteBook(id) {
+    await fetch(`http://localhost:5000/admin/delete-book/${id}`, { method: "DELETE" });
+    fetchBooks();
+}
+
+function editBook(id, title, author, price, description, image, quantity) {
+    document.getElementById('book-id').value = id;
+    document.getElementById('title').value = title;
+    document.getElementById('author').value = author;
+    document.getElementById('price').value = price;
+    document.getElementById('description').value = description;
+    document.getElementById('image').value = image;
+    document.getElementById('quantity').value = quantity;
+}
+
+fetchBooks();
+</script>

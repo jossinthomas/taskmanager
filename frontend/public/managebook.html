@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Manage Books</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+    <h2 class="text-center">Manage Books</h2>
+    
+    <!-- Book Form -->
+    <form id="book-form">
+        <input type="hidden" id="book-id">
+        <input type="text" id="title" placeholder="Title" class="form-control mb-2" required>
+        <input type="text" id="author" placeholder="Author" class="form-control mb-2" required>
+        <input type="number" id="price" placeholder="Price" class="form-control mb-2" required>
+        <textarea id="description" placeholder="Description" class="form-control mb-2" required></textarea>
+        <input type="text" id="image" placeholder="Image URL" class="form-control mb-2">
+        <input type="number" id="quantity" placeholder="Quantity" class="form-control mb-2" required>
+        <button type="submit" class="btn btn-primary w-100">Save Book</button>
+    </form>
+
+    <!-- Books List -->
+    <h3 class="mt-4">Available Books</h3>
+    <table class="table">
+        <thead>
+            <tr><th>Title</th><th>Author</th><th>Price</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="books-list"></tbody>
+    </table>
+
+    <script>
+    async function fetchBooks() {
+        const response = await fetch('http://localhost:5000/books');
+        const books = await response.json();
+        const list = document.getElementById('books-list');
+        list.innerHTML = books.map(book => `
+            <tr>
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>$${book.price}</td>
+                <td>
+                    <button onclick="editBook('${book._id}', '${book.title}', '${book.author}', '${book.price}', '${book.description}', '${book.image}', '${book.quantity}')" class="btn btn-warning">Edit</button>
+                    <button onclick="deleteBook('${book._id}')" class="btn btn-danger">Delete</button>
+                </td>
+            </tr>
+        `).join("");
+    }
+
+    document.getElementById('book-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const id = document.getElementById('book-id').value;
+        const bookData = {
+            title: document.getElementById('title').value,
+            author: document.getElementById('author').value,
+            price: document.getElementById('price').value,
+            description: document.getElementById('description').value,
+            image: document.getElementById('image').value,
+            quantity: document.getElementById('quantity').value,
+        };
+
+        const url = id ? `http://localhost:5000/admin/edit-book/${id}` : 'http://localhost:5000/admin/add-book';
+        const method = id ? "PUT" : "POST";
+
+        await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(bookData) });
+        document.getElementById('book-form').reset();
+        fetchBooks();
+    });
+
+    async function deleteBook(id) {
+        await fetch(`http://localhost:5000/admin/delete-book/${id}`, { method: "DELETE" });
+        fetchBooks();
+    }
+
+    function editBook(id, title, author, price, description, image, quantity) {
+        document.getElementById('book-id').value = id;
+        document.getElementById('title').value = title;
+        document.getElementById('author').value = author;
+        document.getElementById('price').value = price;
+        document.getElementById('description').value = description;
+        document.getElementById('image').value = image;
+        document.getElementById('quantity').value = quantity;
+    }
+
+    fetchBooks();
+    </script>
+</body>
+</html>
