@@ -194,7 +194,7 @@ function Login() {
                 cursor: 'pointer'
               }}
             >
-              Register
+              Register User
             </a>
           </div>
         </div>
